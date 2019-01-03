@@ -4,8 +4,9 @@ DIR_SCR := src
 DIR_OUT := out
 
 SICP_OUT := $(patsubst %.scm,$(DIR_OUT)/%_scm.txt,$(notdir $(wildcard src/*.scm)))
+CRYPT := $(DIR_CRYPT).tgz.gpg
 
-all : SICP
+all : SICP $(CRYPT)
 
 SICP : $(SICP_OUT)
 
@@ -13,7 +14,7 @@ $(DIR_OUT)/%_scm.txt : $(DIR_SCR)/%.scm | $(DIR_OUT)
 	mit-scheme --quiet < $^ > $@
 	@cat $@
 
-$(DIR_CRYPT).tgz.gpg : $(DIR_CRYPT)
+$(CRYPT) : $(DIR_CRYPT)
 	tar -cz $(DIR_CRYPT) | gpg -c -o $@
 
 decrypt :
@@ -22,4 +23,4 @@ decrypt :
 $(DIR_OUT) :
 	@mkdir -p $@
 
-.PHONY : uncrypt SICP
+.PHONY : decrypt SICP
